@@ -22,18 +22,12 @@ router.get('/register', (req, res) => {
 
 // Register handle
 router.post('/register', (req, res) => {
-    const { username, password, password2} = req.body;
+    const { username, password} = req.body;
     const errors = [];
 
     // Check required fields
-    if(!username || !password || !password2){
+    if(!username || !password){
         res.render('register', {message: 'please fill in all fields'});
-        console.log(req.body);
-    }
-
-    // Check if passwords match
-    if(password !== password2){
-        res.render('register', {message: 'Passwords do not match'});
         console.log(req.body);
     }
 
@@ -47,7 +41,6 @@ router.post('/register', (req, res) => {
         res.render('register', {
             username,
             password,
-            password2
         });
     } else {
         // Validation passed
@@ -60,13 +53,11 @@ router.post('/register', (req, res) => {
                     res.render('register',{
                         username,
                         password,
-                        password2
                         });
                 } else {
                     const newUser = new User({
                        username: username,
                        password: password,
-                       password2: password2
                     });
                     console.log(newUser + ' created');
 

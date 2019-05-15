@@ -6,7 +6,6 @@ const sharp = require('sharp');
 const mongoose = require('mongoose');
 const path = require('path');
 const multer = require('multer');
-const location = require('./location');
 const fileRouters = require('./fileRouter');
 const users = require('./users');
 const File = require ('../models/fileUpload');
@@ -15,18 +14,18 @@ const fs = require('fs');
 const helmet = require('helmet');
 const passport = require('passport');
 const session = require('express-session');
+const { ensureAuthenticated, notAuthenticated } = require('../config/auth');
 
 // Passport config
 require('../config/passport')(passport);
 
-/* Comment the ssl keys out for Jelastic
+
 const sslkey = fs.readFileSync('ssl-key.pem');
 const sslcert = fs.readFileSync('ssl-cert.pem');
 const options = {
     key: sslkey,
     cert: sslcert
 };
- */
 
 
 console.log(process.env);
@@ -49,11 +48,9 @@ const upload = multer ({
 }).single('image');
 
 // Connect to mongodb---------------------------------------------------------------------------------------------------
-//                                                                                                                    /BoulderingProject /admin
-mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${process.env.DB_HOST}:${process.env.DB_PORT}/BoulderingProject`, { useNewUrlParser: true }).then(() => {
+mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${process.env.DB_HOST}:${process.env.DB_PORT}/admin`, { useNewUrlParser: true }).then(() => {
     console.log('Connected successfully.');
-    //https.createServer(options, app).listen(process.env.APP_PORT);        // Local
-    app.listen(process.env.APP_PORT);                                       // Jelastic
+    https.createServer(options, app).listen(process.env.APP_PORT);        // Local
 }, err => {
     console.log('Connection to db failed :( ' + err);
 });
@@ -103,12 +100,12 @@ app.post('/upload', (req, res) => {
 
 //PUG-------------------------------------------------------------------------------------------------------------------
 
-app.get('/', (req, res) => {
+app.get('/', notAuthenticated, (req, res) => {
     res.redirect('/home');
 });
 
-app.get('/home', (req, res) => {
-    console.log('Logged in user ' + req.user);
+app.get('/home', notAuthenticated, (req, res) => {
+    console.log('Home page');
     res.render('index.pug');
 });
 
@@ -127,7 +124,6 @@ app.set('view engine', 'pug');
 app.enable('trust proxy');
 app.use('/file', fileRouters);
 app.use('/users', users);
-app.use('/location', location);
 app.use(express.static('public'));
 app.use(express.static('modules'));
 app.use(helmet());

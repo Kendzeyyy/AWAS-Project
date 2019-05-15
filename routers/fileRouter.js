@@ -32,14 +32,14 @@ router.get('/add', ensureAuthenticated, (req, res) => {
     res.render('upload.pug');
 });
 
-router.get('/edit/:id', ensureAuthenticated, (req, res) => {
+router.get('/edit/:id', (req, res) => {
     File.findById(req.params.id).then(file =>{
         console.log(file);
         res.render('edit.pug', {file: file});
     });
 });
 
-router.get('/delete/:id', ensureAuthenticated, (req, res) => {
+router.get('/delete/:id', (req, res) => {
     File.findById(req.params.id).then(file =>{
         console.log(file);
         res.render('delete.pug', {file: file});

@@ -24,22 +24,6 @@ html(lang='en')
                         |   Description:
                         input(type='text', name='description' value=file.description)
                         br
-                        |   Category:
-                        input(list='category', name='gategory', value=file.category)
-                        datalist#category
-                            option(value='Kiipeilyareena')
-                            option(value='Boulderkeskus')
-                        br
-                        |   Location:
-                        input(list='location', name='location', value=file.location)
-                        datalist#location
-                            option(value='Salmisaari')
-                            option(value='Kalasatama')
-                            option(value='Espoo')
-                            option(value='Konala')
-                            option(value='Pasila')
-                            option(value='Herttoniemi')
-                        br
                         input(type='submit')
                     .bottom-input
                         a(href='index.pug')
