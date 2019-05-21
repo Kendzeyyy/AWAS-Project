@@ -101,23 +101,15 @@ app.post('/upload', (req, res) => {
 //PUG-------------------------------------------------------------------------------------------------------------------
 
 app.get('/', notAuthenticated, (req, res) => {
-    res.redirect('/home');
+    //res.redirect('/home');
+    res.render('index.pug', {title: 'Home', message: 'Welcome!'});
 });
 
-app.get('/home', notAuthenticated, (req, res) => {
+app.get('/home', ensureAuthenticated, (req, res) => {
     console.log('Home page');
-    res.render('index.pug');
+    res.render('index.pug', {title: 'Home', message: 'Welcome ' + req.user.username, user: req.use});
 });
 
-// Express Session
-app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Middleware
 app.set('view engine', 'pug');
@@ -127,4 +119,12 @@ app.use('/users', users);
 app.use(express.static('public'));
 app.use(express.static('modules'));
 app.use(helmet());
+app.use(passport.initialize());
+app.use(passport.session());
+// Express Session
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
 

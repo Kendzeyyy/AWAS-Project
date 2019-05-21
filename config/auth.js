@@ -2,10 +2,11 @@
 module.exports={
     ensureAuthenticated: function (req, res, next) {
         if(req.isAuthenticated()){
+            console.log('authenticated');
             return next();
         }
-        res.redirect('/users/login');
         console.log('User must be logged in first');
+        res.redirect('/users/login');
     },
     notAuthenticated: function (req, res, next) {
         if(!req.isAuthenticated()){
